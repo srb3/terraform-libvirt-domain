@@ -6,7 +6,7 @@
 
 🆕 New features:
 
-- Test framework added.
+- Test framework added
 
   CHANGELOG and CONTRIBUTING added.
 
