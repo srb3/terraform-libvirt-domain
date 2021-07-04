@@ -1,0 +1,39 @@
+# Will create 1 libvirt domain, running ubuntu 20.20
+# The ssh user will be cloud
+# The ssh public key will be taken from ~/.ssh/id_rsa.pub
+# The disk size will be the smallest supported by the image
+# The memory will be 1GB
+# The number of vcpu's will be 1
+# All of these values are the defaults and can be overriden
+# Currently their is the choice of CentOS (6 - 8) or Ubuntu (16.04 - 20.20) operating systems
+provider "libvirt" {
+  uri = "qemu:///system"
+}
+
+#resource "libvirt_volume" "ubuntu_base" {
+#  name   = "ubuntu_base_18.04"
+#  pool   = "default"
+#  source = "https://cloud-images.ubuntu.com/releases/bionic/release/ubuntu-18.04-server-cloudimg-amd64.img"
+#}
+
+resource "libvirt_volume" "ubuntu_base" {
+  name   = "ubuntu_base_20.04"
+  pool   = "default"
+  source = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+}
+
+resource "libvirt_volume" "ubuntu_main" {
+  name           = "ubuntu_main"
+  pool           = "default"
+  size           = 40000000000
+  base_volume_id = libvirt_volume.ubuntu_base.id
+}
+
+module "libvirt_domain_default_settings" {
+  unique_libvirt_domain_name = false # use the hostname as domain name - easier for testing
+  source                     = "../../"
+  hostname                   = "ubuntu-mainvol"
+  pool                       = "default"
+  main_volume_id             = libvirt_volume.ubuntu_main.id
+  main_volume_name           = "ubuntu_main"
+}
