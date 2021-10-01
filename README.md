@@ -31,6 +31,7 @@ module "my-domain" {
   disk_size      = 40000000000
   memory         = 4096
   vcpu           = 4
+  autostart      = true
 }
 ```
 
