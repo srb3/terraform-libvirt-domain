@@ -104,3 +104,8 @@ variable "main_volume_name" {
   type        = string
   default     = ""
 }
+variable "autostart" {
+  description = "Set to true if you would like to have autostart endabled."
+  type        = bool
+  default     = false
+}

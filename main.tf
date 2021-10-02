@@ -45,9 +45,10 @@ resource "libvirt_volume" "this_main_volume" {
 }
 
 resource "libvirt_domain" "this_domain" {
-  name   = var.unique_libvirt_domain_name ? local.domain_name : var.hostname
-  memory = var.memory
-  vcpu   = var.vcpu
+  name      = var.unique_libvirt_domain_name ? local.domain_name : var.hostname
+  memory    = var.memory
+  vcpu      = var.vcpu
+  autostart = var.autostart
 
   network_interface {
     network_name   = var.network
