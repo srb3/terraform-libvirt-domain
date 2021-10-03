@@ -1,0 +1,17 @@
+---
+name: cloud_init
+inputs:
+  - name: expected_hostname
+  - name: expected_os_family
+  - name: expected_os_name
+  - name: expected_os_version
+  - name: expected_disk_size
+  - name: expected_memory
+  - name: expected_vcpu
+  - name: expected_packages
+  - name: expected_dirs
+  - name: expected_services
+  - name: expected_container_image
+  - name: expected_container_name
+  - name: expected_container_tag
+  - name: expected_container_repo

@@ -1,4 +1,5 @@
 expected_hostname = input('expected_hostname')
+expected_os_family = input('expected_os_family')
 expected_os_name = input('expected_os_name')
 expected_os_version = input('expected_os_version')
 expected_disk_size = input('expected_disk_size')
@@ -9,12 +10,16 @@ describe bash('hostname') do
   its('stdout') { should match(/#{expected_hostname}/) }
 end
 
-describe bash('awk -F\'"\' \'/^NAME=/ {print $2}\' /etc/os-release |tr \'[:upper:]\' \'[:lower:]\'') do
-  its('stdout') { should match(/#{expected_os_name}/) }
+describe os.family do
+  it { should eq expected_os_family }
 end
 
-describe bash('awk -F\'"\' \'/^VERSION_ID=/ {print $2}\' /etc/os-release') do
-  its('stdout') { should match(/#{expected_os_version}/) }
+describe os.name do
+  it { should eq expected_os_name }
+end
+
+describe os.release do
+  it { should eq expected_os_version }
 end
 
 describe bash('df | grep root | awk \'{print $2}\' | tr -d "\n"') do
@@ -27,5 +32,5 @@ describe bash('free | awk \'/Mem/ {print $2}\' | tr -d "\n"') do
 end
 
 describe bash('cat /proc/cpuinfo | grep processor|wc -l') do
-  its('stdout') { should match(/#{expected_vcpu}/) }
+  its('stdout.to_i') { should eq expected_vcpu }
 end
