@@ -2,7 +2,7 @@
 
 SHELL = /bin/bash
 
-all: all_default all_base_volume all_cloud_init_multi_host all_main_volume  all_override
+all: all_default all_base_volume all_cloud_init all_main_volume  all_override
 
 all_default: build_default test_default clean_default
 build_default: build_deployment_default
@@ -17,8 +17,8 @@ build_deployment_default:
 
 test_deployment_default:
 	cinc-auditor exec test/integration/default/ \
-		--input-file test/integration/attributes/default/attrs.yml \
-		--reporter=cli json:test-result-default-$$(date "+%Y.%m.%d-%H.%M.%S").json
+		-t ssh://cloud@libvirthost -i ~/.ssh/id_rsa \
+		--input-file test/integration/default/attrs.yml
 
 clean_deployment_default:
 	@pushd examples/default; \
@@ -38,32 +38,33 @@ build_deployment_base_volume:
 
 test_deployment_base_volume:
 	cinc-auditor exec test/integration/base_volume/ \
-		--input-file test/integration/attributes/base_volume/attrs.yml \
-		--reporter=cli json:test-result-base_volume-$$(date "+%Y.%m.%d-%H.%M.%S").json
+		-t ssh://cloud@ubuntu-commonbase -i ~/.ssh/id_rsa \
+		--input-file test/integration/base_volume/attrs.yml
 
 clean_deployment_base_volume:
 	@pushd examples/base_volume; \
 	terraform destroy -auto-approve; \
 	popd
 
-all_cloud_init_multi_host: build_cloud_init_multi_host test_cloud_init_multi_host clean_cloud_init_multi_host
-build_cloud_init_multi_host: build_deployment_cloud_init_multi_host
-test_cloud_init_multi_host: test_deployment_cloud_init_multi_host
-clean_cloud_init_multi_host: clean_deployment_cloud_init_multi_host
+all_cloud_init: build_cloud_init test_cloud_init clean_cloud_init
+build_cloud_init: build_deployment_cloud_init
+test_cloud_init: test_deployment_cloud_init
+clean_cloud_init: clean_deployment_cloud_init
 
-build_deployment_cloud_init_multi_host:
-	@pushd examples/cloud_init_multi_host; \
+build_deployment_cloud_init:
+	@pushd examples/cloud_init; \
 	terraform init; \
 	terraform apply -auto-approve; \
 	popd
 
-test_deployment_cloud_init_multi_host:
-	cinc-auditor exec test/integration/cloud_init_multi_host/ \
-		--input-file test/integration/attributes/cloud_init_multi_host/attrs.yml \
-		--reporter=cli json:test-result-cloud_init_multi_host-$$(date "+%Y.%m.%d-%H.%M.%S").json
+test_deployment_cloud_init:
+	cinc-auditor exec test/integration/cloud_init/ \
+		-t ssh://jdoe@ubuntu-0 -i ~/.ssh/id_rsa \
+		--input-file test/integration/cloud_init/attrs.yml \
+		--no-backend-cache --sudo
 
-clean_deployment_cloud_init_multi_host:
-	@pushd examples/cloud_init_multi_host; \
+clean_deployment_cloud_init:
+	@pushd examples/cloud_init; \
 	terraform destroy -auto-approve; \
 	popd
 
@@ -80,8 +81,8 @@ build_deployment_main_volume:
 
 test_deployment_main_volume:
 	cinc-auditor exec test/integration/main_volume/ \
-		--input-file test/integration/attributes/main_volume/attrs.yml \
-		--reporter=cli json:test-result-main_volume-$$(date "+%Y.%m.%d-%H.%M.%S").json
+		-t ssh://cloud@ubuntu-mainvol -i ~/.ssh/id_rsa \
+		--input-file test/integration/main_volume/attrs.yml
 
 clean_deployment_main_volume:
 	@pushd examples/main_volume; \
@@ -101,8 +102,8 @@ build_deployment_override:
 
 test_deployment_override:
 	cinc-auditor exec test/integration/override/ \
-		--input-file test/integration/attributes/override/attrs.yml \
-		--reporter=cli json:test-result-override-$$(date "+%Y.%m.%d-%H.%M.%S").json
+		-t ssh://msmith@centos-domain -i ~/.ssh/id_rsa \
+		--input-file test/integration/override/attrs.yml
 
 clean_deployment_override:
 	@pushd examples/override; \

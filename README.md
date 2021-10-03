@@ -37,6 +37,9 @@ module "my-domain" {
 
 ## Testing
 
-This module uses kitchen-terraform to test its self. To install you can use the
-`Gemfile`. You will need Ruby (ruby devel needed as well) installed and bundler,
-then you can run `bundle install` in the repos home directory
+This module uses [cinc-auditor](https://cinc.sh/start/auditor/) as a test framework.
+To install you can use the [download page](https://cinc.sh/download/) and the
+[getting started guid](https://cinc.sh/start/auditor/). The auditor test are
+located in the [test --> integration directory](./test/integration).
+There is a [make file](./Makefile)
+in the root of the repo that takes care of orchestrating the tests

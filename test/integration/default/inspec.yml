@@ -2,8 +2,7 @@
 name: default
 inputs:
   - name: expected_hostname
-  - name: expected_user
-  - name: expected_ssh_public_key
+  - name: expected_os_family
   - name: expected_os_name
   - name: expected_os_version
   - name: expected_disk_size

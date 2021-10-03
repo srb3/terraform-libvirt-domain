@@ -1,69 +1,55 @@
+# Will create 1 libvirt domain, running ubuntu 21.04
+# The ssh user will be cloud
+# The ssh public key will be taken from ~/.ssh/id_rsa.pub
+# The disk size will be the ~40GB
+# The memory will be 1GB
+# The number of vcpu's will be 1
 provider "libvirt" {
   uri = "qemu:///system"
 }
 
+resource "libvirt_volume" "ubuntu_base" {
+  name   = "ubuntu_base_21.04"
+  pool   = "default"
+  source = "https://cloud-images.ubuntu.com/releases/hirsute/release/ubuntu-21.04-server-cloudimg-amd64-disk-kvm.img"
+}
+
+resource "libvirt_volume" "ubuntu_main" {
+  name           = "ubuntu_main"
+  pool           = "default"
+  size           = 40000000000
+  base_volume_id = libvirt_volume.ubuntu_base.id
+}
+
+module "libvirt_domain_with_attached_main_vol" {
+  unique_libvirt_domain_name = false # use the hostname as domain name - easier for testing
+  source                     = "../../"
+  hostname                   = "ubuntu-mainvol"
+  pool                       = "default"
+  main_volume_id             = libvirt_volume.ubuntu_main.id
+  main_volume_name           = "ubuntu_main"
+}
+
+########### Testing data #########################
+
+# The local variables and the module below are
+# used to generate test data for this example.
+# They are not needed for the core libvirt
+# functionality
 locals {
-  user_data_script_0 = templatefile("${path.module}/templates/cloud-init.sh", {
-    hostname       = "ubuntu-0"
-    user           = "jdoe"
-    ssh_public_key = chomp(file("~/.ssh/id_rsa.pub"))
-  })
-  user_data_script_1 = templatefile("${path.module}/templates/cloud-init.sh", {
-    hostname       = "ubuntu-1"
-    user           = "jdoe"
-    ssh_public_key = chomp(file("~/.ssh/id_rsa.pub"))
-  })
-  user_data_script_2 = templatefile("${path.module}/templates/cloud-init.sh", {
-    hostname       = "ubuntu-2"
-    user           = "jdoe"
-    ssh_public_key = chomp(file("~/.ssh/id_rsa.pub"))
-  })
+  attributes = {
+    expected_hostname   = "ubunti-mainvol"
+    expected_os_family  = "debian"
+    expected_os_name    = "ubuntu"
+    expected_os_version = "21.04"
+    expected_disk_size  = 40000000
+    expected_memory     = 1000000
+    expected_vcpu       = 1
+  }
 }
 
-
-module "ubuntu_0" {
-  source                     = "../.."
-  hostname                   = "ubuntu-0"
-  user                       = "jdoe"
-  os_name                    = "ubuntu"
-  os_version                 = "20.04"
-  disk_size                  = 40000000000
-  memory                     = 4096
-  vcpu                       = 2
-  unique_libvirt_domain_name = false # use hostname as domain - easier for testing
-  user_cloudinit             = local.user_data_script_0
-}
-
-module "ubuntu_1" {
-  source                     = "../.."
-  hostname                   = "ubuntu-1"
-  user                       = "jdoe"
-  os_name                    = "ubuntu"
-  os_version                 = "20.04"
-  disk_size                  = 40000000000
-  memory                     = 4096
-  vcpu                       = 2
-  unique_libvirt_domain_name = false # use hostname as domain - easier for testing
-  user_cloudinit             = local.user_data_script_1
-}
-
-module "ubuntu_2" {
-  source                     = "../.."
-  hostname                   = "ubuntu-2"
-  user                       = "jdoe"
-  os_name                    = "ubuntu"
-  os_version                 = "20.04"
-  disk_size                  = 40000000000
-  memory                     = 4096
-  vcpu                       = 2
-  unique_libvirt_domain_name = false # use hostname as domain - easier for testing
-  user_cloudinit             = local.user_data_script_2
-}
-
-output "ubuntu_1" {
-  value = module.ubuntu_1.ssh
-}
-
-output "ubuntu_0" {
-  value = module.ubuntu_0.ssh
+module "attributes" {
+  source     = "../test_attributes"
+  data       = yamlencode(local.attributes)
+  test_suite = "main_volume"
 }
