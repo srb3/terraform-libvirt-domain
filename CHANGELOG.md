@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.3
+
+💥 Breaking changes:
+- Updating the provider version to 0.6.12 ([PR #10](https://github.com/srb3/terraform-libvirt-domain/pull/10))
+  thanks @raoulbhatia
+
+🔧 Fixes:
+- added pool varaible to the cloud init disk ([PR #8](https://github.com/srb3/terraform-libvirt-domain/pull/8))
+  thanks @tuxpeople
+
 ## 0.0.2
 
 💥 Breaking changes:
