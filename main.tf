@@ -25,6 +25,7 @@ locals {
 
 resource "libvirt_cloudinit_disk" "commoninit" {
   name      = local.cloudinit_iso_name
+  pool      = var.pool
   user_data = local.cloudinit
 }
 
