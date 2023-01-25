@@ -1,7 +1,9 @@
 locals {
   os = {
     "ubuntu" = {
-      "latest" = "https://cloud-images.ubuntu.com/releases/hirsute/release/ubuntu-21.04-server-cloudimg-amd64-disk-kvm.img",
+      "latest" = "https://cloud-images.ubuntu.com/lunar/current/lunar-server-cloudimg-amd64-disk-kvm.img",
+      "23.04"  = "https://cloud-images.ubuntu.com/lunar/current/lunar-server-cloudimg-amd64-disk-kvm.img",
+      "22.10"  = "https://cloud-images.ubuntu.com/kinetic/current/kinetic-server-cloudimg-amd64-disk-kvm.img",
       "21.04"  = "https://cloud-images.ubuntu.com/releases/hirsute/release/ubuntu-21.04-server-cloudimg-amd64-disk-kvm.img",
       "20.10"  = "https://cloud-images.ubuntu.com/releases/groovy/release/ubuntu-20.10-server-cloudimg-amd64-disk-kvm.img",
       "20.04"  = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img",
