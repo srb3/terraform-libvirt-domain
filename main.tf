@@ -4,7 +4,7 @@ resource "random_id" "uuid" {
 }
 
 module "os" {
-  count      = var.os_cached_image == "" ? 0 : 1
+  count      = var.os_cached_image == "" ? 1 : 0
   source     = "./modules/terraform-libvirt-os"
   os_name    = var.os_name
   os_version = var.os_version
