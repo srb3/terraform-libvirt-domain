@@ -1,5 +1,6 @@
 locals {
-  connection = "ssh ${var.user}@${libvirt_domain.this_domain.network_interface.0.addresses[0]}"
+  ip = var.network_config == "" ? libvirt_domain.this_domain.network_interface.0.addresses[0] : ""
+  connection = "ssh ${var.user}@${local.ip}"
 }
 
 output "ssh" {
@@ -11,5 +12,5 @@ output "user" {
 }
 
 output "ip" {
-  value = libvirt_domain.this_domain.network_interface.0.addresses[0]
+  value = var.network_config == "" ? local.ip : ""
 }
