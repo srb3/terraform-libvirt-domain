@@ -21,13 +21,16 @@ locals {
     user           = var.user
     ssh_public_key = chomp(file(var.ssh_public_key))
   })
-  cloudinit = var.user_cloudinit != "" ? var.user_cloudinit : local.local_cloudinit
+  local_network_config = templatefile("${path.module}/templates/network_config.yaml", {})
+  cloudinit            = var.user_cloudinit != "" ? var.user_cloudinit : local.local_cloudinit
+  network_config       = var.network_config != "" ? var.network_config : local.local_network_config
 }
 
 resource "libvirt_cloudinit_disk" "commoninit" {
-  name      = local.cloudinit_iso_name
-  pool      = var.pool
-  user_data = local.cloudinit
+  name           = local.cloudinit_iso_name
+  pool           = var.pool
+  user_data      = local.cloudinit
+  network_config = local.network_config
 }
 
 resource "libvirt_volume" "this_base_volume" {
@@ -54,7 +57,7 @@ resource "libvirt_domain" "this_domain" {
 
   network_interface {
     network_name   = var.network
-    wait_for_lease = true
+    wait_for_lease = var.network_config == "" ? true : false
   }
 
   disk {

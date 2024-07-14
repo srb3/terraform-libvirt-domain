@@ -81,6 +81,12 @@ variable "user_cloudinit" {
   default     = ""
 }
 
+variable "network_config" {
+  description = "A user defined cloudinit network config"
+  type        = string
+  default     = ""
+}
+
 variable "base_volume_id" {
   description = "If you want to use an existing base volume, set it's id here"
   type        = string
