@@ -1,6 +1,13 @@
 # Changelog
 
+## 0.0.11
+
+🔧 Fixes:
+
+- Fixed the CPU block declaration
+
 ## 0.0.10
+
 💥 Breaking changes:
 - added `cpu_mode` option
 
