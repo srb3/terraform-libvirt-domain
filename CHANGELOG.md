@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.10
+💥 Breaking changes:
+- added `cpu_mode` option
+
 ## 0.0.3
 
 💥 Breaking changes:

@@ -52,6 +52,12 @@ variable "vcpu" {
   default     = 1
 }
 
+variable "cpu_mode" {
+  description = "The mode to use for the CPU"
+  type        = string
+  default     = "host-passthrough"
+}
+
 variable "pool" {
   description = "The name of the volume pool to use"
   type        = string
