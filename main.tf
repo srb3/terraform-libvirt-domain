@@ -54,7 +54,7 @@ resource "libvirt_domain" "this_domain" {
   memory    = var.memory
   vcpu      = var.vcpu
   autostart = var.autostart
-  cpu = {
+  cpu {
     mode = var.cpu_mode
   }
 
