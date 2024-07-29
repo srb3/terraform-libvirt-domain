@@ -54,6 +54,9 @@ resource "libvirt_domain" "this_domain" {
   memory    = var.memory
   vcpu      = var.vcpu
   autostart = var.autostart
+  cpu = {
+    mode = var.cpu_mode
+  }
 
   network_interface {
     network_name   = var.network
